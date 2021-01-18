@@ -12,7 +12,7 @@ object EventServiceMock {
     val exposures =
       Iterator.from(1).flatMap { exposureId =>
         Iterator("startEvent", "endEvent").flatMap { obsEventName =>
-          List.fill(5000)((exposureId, obsEventName))
+          List.fill(22000)((exposureId, obsEventName))
         }
       }
 
@@ -23,7 +23,7 @@ object EventServiceMock {
         case ((exposureId, obsEventName), eventId) =>
           SystemEventRecord.generate(exposureId, obsEventName, EventFactory.generateEvent(eventId))
       }
-      .take(220000)
+      .take(200000)
   }
 
   def captureSnapshot(exposureId: Long, obsEventName: String): Seq[SystemEventRecord] = {

@@ -28,14 +28,14 @@ object ParquetBatchJob2 {
       println("deleted the existing table")
     }
 
-    val parquetSnapshotIo = new ParquetSnapshotIO(Constants.BatchingDir)
+    val parquetSnapshotIo = new ParquetIO(Constants.BatchingDir)
 
     def write() = {
       Source(exposureIds)
         .flatMapConcat { expId =>
           Source(obsEventNames).mapAsync(1) { obsName =>
             val start = System.currentTimeMillis()
-            parquetSnapshotIo.write(EventServiceMock.captureSnapshot(expId, obsName)).map { _ =>
+            parquetSnapshotIo.writeAsStream(EventServiceMock.captureSnapshot(expId, obsName)).map { _ =>
               val current = System.currentTimeMillis()
               println(s"Finished writing items in ${current - start} milliseconds >>>>>>>>>>>>>>>>>>")
             }

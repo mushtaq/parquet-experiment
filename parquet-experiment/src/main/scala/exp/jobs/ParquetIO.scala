@@ -7,7 +7,7 @@ import com.github.mjakubowski84.parquet4s._
 import exp.api.SystemEventRecord
 import org.apache.parquet.hadoop.metadata.CompressionCodecName
 
-import java.nio.file.{Files, Path, Paths}
+import java.nio.file.{Files, Path, Paths, StandardCopyOption}
 import java.util.UUID
 import scala.concurrent.{ExecutionContextExecutor, Future}
 
@@ -39,8 +39,8 @@ class ParquetIO(path: String)(implicit actorSystem: ActorSystem[_]) {
       val w                = ParquetWriter.writer[SystemEventRecord](tmpLocation)
       w.write(batch)
       w.close()
-      Files.move(Paths.get(tmpCrcLocation), Paths.get(finalCrcLocation))
-      Files.move(Paths.get(tmpLocation), Paths.get(finalLocation))
+      Files.move(Paths.get(tmpCrcLocation), Paths.get(finalCrcLocation), StandardCopyOption.ATOMIC_MOVE)
+      Files.move(Paths.get(tmpLocation), Paths.get(finalLocation), StandardCopyOption.ATOMIC_MOVE)
     }(blockingEC)
 
   def read[P](exposureId: String)(implicit schemaResolver: ParquetSchemaResolver[P], decoder: ParquetRecordDecoder[P]): Future[Seq[P]] = {

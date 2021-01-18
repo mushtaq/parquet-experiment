@@ -19,7 +19,7 @@ object ParquetToDelta {
     val dataFrame = spark.readStream
       .format("parquet")
       .schema(Encoders.product[SystemEventRecord].schema)
-      .load("target/data/parquet-batches")
+      .load("target/data/parquet")
 
     val query = dataFrame.writeStream
       .format("delta")

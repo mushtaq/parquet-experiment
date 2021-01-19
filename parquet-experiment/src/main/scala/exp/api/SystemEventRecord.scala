@@ -2,7 +2,8 @@ package exp.api
 
 import csw.params.core.formats.ParamCodecs._
 import csw.params.events.SystemEvent
-import io.bullet.borer.Json
+import io.bullet.borer.derivation.MapBasedCodecs
+import io.bullet.borer.{Codec, Json}
 
 case class SystemEventRecord(
     exposureId: String,
@@ -30,4 +31,6 @@ object SystemEventRecord {
       Json.encode(systemEvent.paramSet).toUtf8String
     )
   }
+
+  implicit lazy val seCodec: Codec[SystemEventRecord] = MapBasedCodecs.deriveCodec
 }
